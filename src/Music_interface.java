@@ -1,15 +1,97 @@
 import jaco.mp3.player.MP3Player;
 
 import java.io.File;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.swing.JFileChooser;
 
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import pirates.music.PiratesMusic;
 
+class AudioListener implements LineListener{
+    @Override
+    public void update(LineEvent event ){
+        LineEvent.Type eventType=event.getType();
+        if(eventType==LineEvent.Type.STOP||eventType==LineEvent.Type.CLOSE){
+            synchronized(this){
+                notify();
+            }
+        }
+    }
+    public synchronized void waitUntilDone()throws InterruptedException{
+        wait();
+    }
+    }
 
+public class Music_interface extends javax.swing.JFrame {
+    PiratesMusic PM=new PiratesMusic();
+    public static int count;
+    private Object Display;
+    public static class FilePath {
+    String pirate;
+        private String piratespath;
 
-   
+    public FilePath() {
+    }
+
+    public FilePath(String pirate) {
+        this.pirate = pirate;
+    }
+
+}
+
+public static class Node{
+    FilePath MP;
+    Node next;
+
+        public Node(FilePath MP, Node next) {
+            this.MP = MP;
+            this.next = next;
+        }
+
+        public Node(FilePath MP) {
+            this.MP = MP;
+        }
+
+}
+public static class PiratesList{
+    Node head,tail;
+    public PiratesList(){
+        this.head=this.tail=null;
+    }
+    public boolean isEmpty(){
+        return this.head==null;
+    }
+    public void addToTail(FilePath piratespath){
+        Node node=new Node(piratespath);
+        if(!this.isEmpty()){
+              this.tail.next=this.tail;
+            this.tail=node;
+        }
+        else{
+            this.head=this.tail=node;
+        }}
+    public void piratesMusicPlayer(){
+            Node temp=this.head;
+            int p=1;
+            while(temp!=null){
+                try {
+                    MP3Player piratesplayer=new MP3Player(new File(temp.MP.piratespath));
+                    piratesplayer.play();
+
+                    while(!piratesplayer.isStopped()){
+                        Thread.sleep(1);
+                    }
+                }
+                catch(Exception e){
+                    System.err.println(e.getMessage());
+                }
+                temp=temp.next;
+                p++;
+            }
+        }}
+
 
 public static class piratesEndless{
     Node head;
@@ -32,7 +114,6 @@ public static class piratesEndless{
         }
         else
             this.head=temp;
-        
     }
     public void EndlessPlayer(){
         Node temp=this.head;
@@ -40,7 +121,7 @@ public static class piratesEndless{
             try{
                 MP3Player piratesplayer=new MP3Player(new File(temp.MP.piratespath));
                     piratesplayer.play();
-                
+
                     while(!piratesplayer.isStopped()){
                         Thread.sleep(1);
             }
@@ -51,18 +132,16 @@ public static class piratesEndless{
 //            System.out.println(e.getMessage());
         }
     }}
-            
+
 
     public Music_interface() {
         initComponents();
     }
 
-  
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        jFileChooser1 = new javax.swing.JFileChooser();
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private void initComponents() {jFileChooser1 = new javax.swing.JFileChooser();
         checkbox1 = new java.awt.Checkbox();
         canvas1 = new java.awt.Canvas();
         jPanel1 = new javax.swing.JPanel();
@@ -113,6 +192,7 @@ public static class piratesEndless{
             settingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 207, Short.MAX_VALUE)
         );
+
         songspanel.setBackground(new java.awt.Color(24, 24, 24));
         songspanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         songspanel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -136,9 +216,7 @@ public static class piratesEndless{
         songs1.setBackground(new java.awt.Color(45, 45, 45));
         songs1.setFont(new java.awt.Font("Snap ITC", 1, 24)); // NOI18N
         songs1.setForeground(new java.awt.Color(255, 51, 51));
-        songs1.setText("Songs");
-
-        javax.swing.GroupLayout songspanelLayout = new javax.swing.GroupLayout(songspanel);
+        songs1.setText("Songs");javax.swing.GroupLayout songspanelLayout = new javax.swing.GroupLayout(songspanel);
         songspanel.setLayout(songspanelLayout);
         songspanelLayout.setHorizontalGroup(
             songspanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,6 +265,7 @@ public static class piratesEndless{
         );
 
         jPanel6.setBackground(new java.awt.Color(46, 46, 46));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -204,9 +283,7 @@ public static class piratesEndless{
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 playlistpanelMouseReleased(evt);
             }
-        });
-
-        artists1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/playlist.png"))); // NOI18N
+        });artists1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/playlist.png"))); // NOI18N
         artists1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 artists1MouseReleased(evt);
@@ -264,6 +341,7 @@ public static class piratesEndless{
                 play1ActionPerformed(evt);
             }
         });
+
         pause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pause.png"))); // NOI18N
         pause.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -286,9 +364,7 @@ public static class piratesEndless{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopActionPerformed(evt);
             }
-        });
-
-        loopOnce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/loop.png"))); // NOI18N
+        });loopOnce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/loop.png"))); // NOI18N
         loopOnce.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 loopOnceMouseReleased(evt);
@@ -339,8 +415,7 @@ public static class piratesEndless{
 
         Loopcounter.setForeground(new java.awt.Color(240, 240, 240));
 
-        Loopcounter1.setForeground(new java.awt.Color(240, 240, 240));
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        Loopcounter1.setForeground(new java.awt.Color(240, 240, 240));javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,8 +469,7 @@ public static class piratesEndless{
                         .addGap(43, 43, 43))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(shuffle, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(shuffle, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(EndlessLoop, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(pause, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(play1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -440,8 +514,7 @@ public static class piratesEndless{
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(setting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap().addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(PiratesLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -470,19 +543,19 @@ public static class piratesEndless{
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
-    private void SongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SongsActionPerformed
+    private void SongsActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_SongsActionPerformed
+    }
 
-    private void SongsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SongsMouseReleased
+    private void SongsMouseReleased(java.awt.event.MouseEvent evt) {
          FileFilter filter=new FileNameExtensionFilter("MP3 Files","mp3","mpeg3");
         JFileChooser chooser=new JFileChooser();
        chooser.setMultiSelectionEnabled(true);
         chooser.addChoosableFileFilter(filter);
-      
-        
+
+
         int returnVal=chooser.showOpenDialog(null);
         if(returnVal==JFileChooser.APPROVE_OPTION){
 
@@ -493,9 +566,9 @@ public static class piratesEndless{
 
             PM.Play(song);
         }
-    }//GEN-LAST:event_SongsMouseReleased
+    }
 
-    private void loopOnceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopOnceActionPerformed
+    private void loopOnceActionPerformed(java.awt.event.ActionEvent evt) {
           switch (count){
             case 0:
             count=1;
@@ -507,45 +580,44 @@ public static class piratesEndless{
             break;}
         PiratesList pl=new PiratesList();
       pl.piratesMusicPlayer();
-    }//GEN-LAST:event_loopOnceActionPerformed
+    }
 
-    private void loopOnceMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loopOnceMouseReleased
+    private void loopOnceMouseReleased(java.awt.event.MouseEvent evt) {
 
-    }//GEN-LAST:event_loopOnceMouseReleased
+    }
 
-    private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
+    private void stopActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_stopActionPerformed
+    }
 
-    private void stopMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stopMouseReleased
-        PM.Stop();
-        }//GEN-LAST:event_stopMouseReleased
+    private void stopMouseReleased(java.awt.event.MouseEvent evt) {
+        PM.Stop();}
 
-    private void pauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseActionPerformed
+    private void pauseActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_pauseActionPerformed
+    }
 
-    private void pauseMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pauseMouseReleased
+    private void pauseMouseReleased(java.awt.event.MouseEvent evt) {
     PM.Pause();
-    }//GEN-LAST:event_pauseMouseReleased
+    }
 
-    private void play1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_play1ActionPerformed
+    private void play1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_play1ActionPerformed
+    }
 
-    private void play1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_play1MouseReleased
+    private void play1MouseReleased(java.awt.event.MouseEvent evt) {
         PM.Resume();
 
-    }//GEN-LAST:event_play1MouseReleased
+    }
 
-    private void songspanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songspanelMouseReleased
+    private void songspanelMouseReleased(java.awt.event.MouseEvent evt) {
         FileFilter filter=new FileNameExtensionFilter("MP3 Files","mp3","mpeg3");
         JFileChooser chooser=new JFileChooser();
        chooser.setMultiSelectionEnabled(true);
         chooser.addChoosableFileFilter(filter);
         int returnVal=chooser.showOpenDialog(null);
         if(returnVal==JFileChooser.APPROVE_OPTION){
- 
+
             File myFile=chooser.getSelectedFile();
             String song  =myFile+"";
             String name=chooser.getSelectedFile().getName();
@@ -553,13 +625,13 @@ public static class piratesEndless{
 
             PM.Play(song);
         }
-    }//GEN-LAST:event_songspanelMouseReleased
+    }
 
-    private void jPanel3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseReleased
-     
-    }//GEN-LAST:event_jPanel3MouseReleased
+    private void jPanel3MouseReleased(java.awt.event.MouseEvent evt) {
 
-    private void shuffleMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shuffleMouseReleased
+    }
+
+    private void shuffleMouseReleased(java.awt.event.MouseEvent evt) {
         switch (count){
             case 0:
             count=1;
@@ -569,21 +641,21 @@ public static class piratesEndless{
             count=0;
             shufflecounter.setText("Shuffle Off");
             break;}
-    }//GEN-LAST:event_shuffleMouseReleased
+    }
 
-    private void artists1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_artists1ActionPerformed
+    private void artists1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_artists1ActionPerformed
+    }
 
-    private void artists1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_artists1MouseReleased
+    private void artists1MouseReleased(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_artists1MouseReleased
+    }
 
-    private void playlistpanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlistpanelMouseReleased
-          
+    private void playlistpanelMouseReleased(java.awt.event.MouseEvent evt) {
+
         JFileChooser chooser=new JFileChooser();
        chooser.setMultiSelectionEnabled(true);
-       
+
         int returnVal=chooser.showOpenDialog(null);
         if(returnVal==JFileChooser.APPROVE_OPTION){
             PM.Stop();
@@ -594,12 +666,11 @@ public static class piratesEndless{
 
             PM.Play(song);
         }
-    }//GEN-LAST:event_playlistpanelMouseReleased
+    }
 
-    private void EndlessLoopMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EndlessLoopMouseReleased
+    private void EndlessLoopMouseReleased(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_EndlessLoopMouseReleased
-    private void EndlessLoopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EndlessLoopActionPerformed
+    }private void EndlessLoopActionPerformed(java.awt.event.ActionEvent evt) {
         switch (count){
             case 0:
             count=1;
@@ -611,13 +682,18 @@ public static class piratesEndless{
             break;}
         PiratesList pl=new PiratesList();
         pl.piratesMusicPlayer();
-    }//GEN-LAST:event_EndlessLoopActionPerformed
-    
+    }
+
     /**
      * @param args the command line arguments
      */
+
     public static void main(String args[]) {
-        
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -636,6 +712,7 @@ public static class piratesEndless{
         }
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -644,7 +721,7 @@ public static class piratesEndless{
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JButton EndlessLoop;
     private javax.swing.JLabel LoopCounter;
     private javax.swing.JLabel Loopcounter;
@@ -674,5 +751,5 @@ public static class piratesEndless{
     private javax.swing.JLabel songs1;
     private javax.swing.JPanel songspanel;
     private javax.swing.JButton stop;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }
